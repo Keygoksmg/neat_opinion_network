@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "class-network"
+version = "0.1.0"
+description = ""
+authors = ["Keigo Kusumegi <kusukun7@gmail.com>"]
+readme = "README.md"
+packages = [{include = "class_network"}]
+
+[tool.poetry.dependencies]
+python = "3.11"
+networkx = "^3.2.1"
+numpy = "^1.26.1"
+matplotlib = "^3.8.1"
+jupyterlab = "^4.0.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

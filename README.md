@@ -14,7 +14,7 @@ Follow these steps to set up the project environment:
 
 ```
 <!-- 1. clone this code into your local -->
-git clone 
+git clone git@github.com:Keygoksmg/neat_opinion_network.git
 
 <!-- 2. Install Dependencies:  -->
 poetry install
