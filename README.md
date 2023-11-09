@@ -1,6 +1,6 @@
-# DeGroot Opinion Dynamics Simulation
+# Opinion Dynamics Simulation
 
-This project simulates opinion dynamics using the DeGroot model on a synthetic network. It uses Python with libraries such as `networkx`, `numpy`, and `matplotlib` for the simulation and visualization of the results. Additionally, we use Jupyter Lab for an interactive development environment.
+This project simulates opinion dynamics on synthetic/empirical networks. It uses Python with libraries such as `networkx`, `numpy`, `scipy`, and `matplotlib` for the simulation and visualization of the results. Additionally, we use Jupyter Lab for an interactive development environment.
 
 ## Prerequisites
 
