@@ -7,12 +7,14 @@ readme = "README.md"
 packages = [{include = "class_network"}]
 
 [tool.poetry.dependencies]
-python = "3.11"
+python = ">=3.11,<3.13"
 networkx = "^3.2.1"
 numpy = "^1.26.1"
 matplotlib = "^3.8.1"
 jupyterlab = "^4.0.8"
 scipy = "^1.11.3"
+polars = "^0.19.13"
+powerlaw = "^1.5"
 
 
 [build-system]
