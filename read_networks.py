@@ -58,4 +58,4 @@ def read_combined_graph_from_csv(
     initial_citation_graph.add_nodes_from(simplified_citation_graph)
     initial_citation_graph.remove_edges_from(nx.selfloop_edges(initial_citation_graph))
 
-    return simplified_citation_graph, initial_citation_graph, df
+    return simplified_citation_graph, initial_citation_graph, init_cutoff_date, df
