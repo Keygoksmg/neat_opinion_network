@@ -19,10 +19,10 @@ def read_citation_graph_from_edgelist(field, filename='citation_lcc.edgelist', g
 
 
 def read_combined_graph_from_csv(
-    field, \
-    filename = 'ssn_author_ref_combined.csv', \
-    init_cutoff_date = '2019-03-31', \
-    simplified = False, \
+    field,
+    filename = 'ssn_author_ref_combined.csv',
+    init_cutoff_date = '2019-03-31',
+    simplified = False,
     graph=nx.DiGraph) -> nx.DiGraph or nx.Graph:
     """
     (from Shengqi-11/19 update)
