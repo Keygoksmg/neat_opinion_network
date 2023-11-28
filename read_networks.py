@@ -18,6 +18,17 @@ def read_citation_graph_from_edgelist(field, filename='citation_lcc.edgelist', g
     return citation_graph
 
 
+# extract connected component
+def extract_largest_connected_component(g):
+    if g.is_directed():
+        lcc = max(nx.weakly_connected_components(g), key=len)
+        g_lcc = getattr.subgraph(lcc).copy()
+    else:
+        lcc = max(nx.connected_components(g), key=len)
+        g_lcc = g.subgraph(lcc).copy()
+    return g_lcc
+
+
 def read_combined_graph_from_csv(
     field,
     filename = 'ssn_author_ref_combined.csv',
@@ -41,21 +52,29 @@ def read_combined_graph_from_csv(
     """
     df = pd.read_csv(f'data/{field}/{filename}', sep=',')
 
-    simplified_citation_graph = nx.from_pandas_edgelist(
+    full_graph = nx.from_pandas_edgelist(
         df,
         source = 'Citing_AuthorID',
         target = 'Cited_AuthorID',
     )
-    simplified_citation_graph.remove_edges_from(nx.selfloop_edges(simplified_citation_graph))
+    full_graph.remove_edges_from(nx.selfloop_edges(full_graph))
+    full_grpah_lcc = extract_largest_connected_component(full_graph)
 
-    cutoff_df = df.loc[df['CitationDate'] <= init_cutoff_date]
+    # extract all nodes in LCC at final step
+    nodes_full_lcc = list(full_grpah_lcc.nodes())
+    df_with_lcc = df[
+        df['Citing_AuthorID'].isin(nodes_full_lcc) &
+        df['Cited_AuthorID'].isin(nodes_full_lcc)
+    ]
+
+    cutoff_df = df_with_lcc.loc[df_with_lcc['CitationDate'] <= init_cutoff_date]
     #print(cutoff_df)
     initial_citation_graph = nx.from_pandas_edgelist(
         cutoff_df,
         source = 'Citing_AuthorID',
         target = 'Cited_AuthorID',
     )
-    initial_citation_graph.add_nodes_from(simplified_citation_graph)
+    initial_citation_graph.add_nodes_from(full_grpah_lcc)
     initial_citation_graph.remove_edges_from(nx.selfloop_edges(initial_citation_graph))
 
-    return simplified_citation_graph, initial_citation_graph, init_cutoff_date, df
+    return full_grpah_lcc, initial_citation_graph, init_cutoff_date, df_with_lcc
