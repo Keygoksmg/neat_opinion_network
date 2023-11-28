@@ -22,7 +22,7 @@ def read_citation_graph_from_edgelist(field, filename='citation_lcc.edgelist', g
 def extract_largest_connected_component(g):
     if g.is_directed():
         lcc = max(nx.weakly_connected_components(g), key=len)
-        g_lcc = getattr.subgraph(lcc).copy()
+        g_lcc = g.subgraph(lcc).copy()
     else:
         lcc = max(nx.connected_components(g), key=len)
         g_lcc = g.subgraph(lcc).copy()
@@ -34,7 +34,7 @@ def read_combined_graph_from_csv(
     filename = 'ssn_author_ref_combined.csv',
     init_cutoff_date = '2019-03-31',
     simplified = False,
-    graph=nx.DiGraph) -> nx.DiGraph or nx.Graph:
+    graph=nx.Graph()) -> nx.DiGraph or nx.Graph:
     """
     (from Shengqi-11/19 update)
     Read the citation graph as (un)directed graph, based on an csv file.
@@ -56,6 +56,7 @@ def read_combined_graph_from_csv(
         df,
         source = 'Citing_AuthorID',
         target = 'Cited_AuthorID',
+        create_using = graph
     )
     full_graph.remove_edges_from(nx.selfloop_edges(full_graph))
     full_grpah_lcc = extract_largest_connected_component(full_graph)
@@ -73,6 +74,7 @@ def read_combined_graph_from_csv(
         cutoff_df,
         source = 'Citing_AuthorID',
         target = 'Cited_AuthorID',
+        create_using = graph
     )
     initial_citation_graph.add_nodes_from(full_grpah_lcc)
     initial_citation_graph.remove_edges_from(nx.selfloop_edges(initial_citation_graph))
