@@ -34,7 +34,7 @@ def read_combined_graph_from_csv(
     filename = 'ssn_author_ref_combined.csv',
     init_cutoff_date = '2019-03-31',
     simplified = False,
-    graph=nx.Graph()) -> nx.DiGraph or nx.Graph:
+    graph=nx.Graph()) -> nx.DiGraph | nx.Graph:
     """
     (from Shengqi-11/19 update)
     Read the citation graph as (un)directed graph, based on an csv file.
@@ -58,25 +58,28 @@ def read_combined_graph_from_csv(
         target = 'Cited_AuthorID',
         create_using = graph
     )
+    # remove self-loops
     full_graph.remove_edges_from(nx.selfloop_edges(full_graph))
+    # extract LCC as graph
     full_grpah_lcc = extract_largest_connected_component(full_graph)
 
-    # extract all nodes in LCC at final step
+    # extract all nodes in LCC as df at final step
     nodes_full_lcc = list(full_grpah_lcc.nodes())
     df_with_lcc = df[
         df['Citing_AuthorID'].isin(nodes_full_lcc) &
         df['Cited_AuthorID'].isin(nodes_full_lcc)
     ]
 
+    # get df with cutoff date
     cutoff_df = df_with_lcc.loc[df_with_lcc['CitationDate'] <= init_cutoff_date]
-    #print(cutoff_df)
-    initial_citation_graph = nx.from_pandas_edgelist(
+    initial_graph = nx.from_pandas_edgelist(
         cutoff_df,
         source = 'Citing_AuthorID',
         target = 'Cited_AuthorID',
         create_using = graph
     )
-    initial_citation_graph.add_nodes_from(full_grpah_lcc)
-    initial_citation_graph.remove_edges_from(nx.selfloop_edges(initial_citation_graph))
+    # remove self-loop
+    initial_graph.add_nodes_from(full_grpah_lcc)
+    initial_graph.remove_edges_from(nx.selfloop_edges(initial_graph))
 
-    return full_grpah_lcc, initial_citation_graph, init_cutoff_date, df_with_lcc
+    return full_grpah_lcc, initial_graph, init_cutoff_date, df_with_lcc
